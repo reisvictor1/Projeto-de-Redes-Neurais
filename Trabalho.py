@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 
 # Esquece essa porra
@@ -13,15 +14,36 @@ def perc(num, peso, bias):
     return 1/(1+(math.exp(-(sum(multiplicar(num, peso), bias)))))
     
 
-# Código aqui
+# Abro o arquivo de imagem
 f = open("semeion.data", "r")
-backup = f.readline().split(" ")
-print(backup)
-for z in range(256):
-    matriz = [[int(float(backup[z])) for x in range(16)] for y in range(16)]
-for x in range(16):
-    print(matriz[x])
+
+list = f.readline().split(" ")
+
+input = np.zeros(256)
+
+#Converto os dados de lista para float
+for x in range (256):
+    input[x] = float(list[x])
+
+#Declaro os pesos iniciais, por meio da função de He-et-al
+whl = np.random.randn(16, 256) * np.sqrt(2 / 256)
+
+wout = np.random.randn(10, 16) * np.sqrt(2 / 16)
+
+#Declaro a hidden layer
+hl = np.zeros(16)
+
+output = np.zeros(10)
+
+bias = 0
+
+for x in range (16):
+    hl[x] = perc(input, whl[x], bias)
+
+for x in range (10):
+    output[x] = perc(hl, wout[x], bias)
+print(output)
+print(max(output))
+
+
 f.close()
-exit(1)
-
-
